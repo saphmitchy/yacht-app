@@ -1,5 +1,3 @@
-import { randomInt } from "crypto";
-
 export type Dice = Array<number>;
 
 function count(d: Dice, n: number) {
@@ -36,7 +34,7 @@ function fullHouse(d: Dice) {
     if (e[0] == e[1] && e[3] == e[4] && (e[1] == e[2] || e[2] == e[3])) {
         return d.reduce((a, b) => a + b);
     } else {
-        return undefined;
+        return null;
     }
 }
 
@@ -46,7 +44,7 @@ function fourOfAKind(d: Dice) {
     if (e[1] == e[2] && e[2] == e[3] && (e[0] == e[1] || e[3] == e[4])) {
         return d.reduce((a, b) => a + b);
     } else {
-        return undefined;
+        return null;
     }
 }
 
@@ -65,7 +63,7 @@ function smallStraight(d: Dice) {
     if ((a == 1 && b == 3) || (a == 0 && b == 4)) {
         return 15;
     } else {
-        return undefined;
+        return null;
     }
 }
 
@@ -75,7 +73,7 @@ function largeStraight(d: Dice) {
     if (e[0] + 1 == e[1] && e[1] + 1 == e[2] && e[2] + 1 == e[3] && e[3] + 1 == e[4]) {
         return 30;
     } else {
-        return undefined;
+        return null;
     }
 }
 
@@ -83,7 +81,7 @@ function yacht(d: Dice) {
     if (d[0] == d[1] && d[1] == d[2] && d[2] == d[3] && d[3] == d[4]) {
         return 50;
     } else {
-        return undefined;
+        return null;
     }
 }
 
@@ -106,33 +104,37 @@ export const box = [
     { id: "Yacht", func: yacht },
 ]
 
+function init_dice() {
+    const dice = new Array(5);
+    for (let i = 0; i < dice.length; i++) {
+        dice[i] = { value: 1, locked: false };
+    }
+    return dice;
+}
+
 export class Yacht {
     public readonly dice: {
         value: number,
         locked: boolean,
     }[];
-    public readonly points: Array<number | undefined>;
+    public readonly points: Array<number | null>;
     public readonly turn: number;
 
     constructor() {
-        this.dice = new Array(5);
+        this.dice = init_dice();
         this.points = new Array(box.length);
         this.turn = 0;
-        this.points.fill(undefined);
-        for (let i = 0; i < this.dice.length; i++) {
-            this.dice[i] = { value: 1, locked: false };
-        }
+        this.points.fill(null);
     }
 
     get_round(): number {
-        return this.points.map<number>(x => (x == undefined) ? 0 : 1).reduce((a, b) => a + b);
+        return this.points.map<number>(x => (x == null) ? 0 : 1).reduce((a, b) => a + b);
     }
 
     throw_dice() {
-        if (3 <= this.turn ||
-            this.get_round() == this.points.length ||
+        if (this.get_round() == this.points.length ||
             !this.dice.some(x => !x.locked)) {
-            return undefined;
+            return null;
         }
         let res: Yacht = Object.assign(
             Object.create(Yacht.prototype),
@@ -143,9 +145,12 @@ export class Yacht {
             }
         );
         for (let i = 0; i < this.dice.length; i++) {
-            res.dice[i] = {
-                ...this.dice[i],
-                value: randomInt(1, 7),
+            if (!res.dice[i].locked) {
+                const nextValue = Math.floor(Math.random() * 6) + 1
+                res.dice[i] = {
+                    ...this.dice[i],
+                    value: nextValue,
+                }
             }
         }
         return res;
@@ -181,26 +186,29 @@ export class Yacht {
         )
     }
 
-    fill_box(index: number): Yacht | undefined {
-        if (this.points[index] != undefined) {
-            return undefined;
+    get_score(index: number): number {
+        const res = box[index].func(this.dice.map(x => x.value));
+        return res == null ? 0 : res;
+    }
+
+    fill_box(index: number): Yacht | null {
+        if (this.points[index] != null) {
+            return null;
         }
-        let res = Object.assign(
+        let res: Yacht = Object.assign(
             Object.create(Yacht.prototype),
             this,
             {
-            points: [...this.points],
-            turn: 0,
-        });
-        res.points[index] = box[index].func(this.dice.map(x => x.value));
-        if (res.points[index] == undefined) {
-            res.points[index] = 0;
-        }
+                dice: init_dice(),
+                points: [...this.points],
+                turn: 0,
+            });
+        res.points[index] = this.get_score(index);
         return res;
     }
 
     calc_score() {
-        const f = (a: number | undefined, b: number | undefined) => (a == undefined ? 0 : a) + (b == undefined ? 0 : b);
+        const f = (a: number | null, b: number | null) => (a == null ? 0 : a) + (b == null ? 0 : b);
         const upper = this.points.slice(0, 6).reduce(f)!;
         const lower = this.points.slice(6, 12).reduce(f)!;
         const boanus = (upper >= 63) ? 35 : 0;

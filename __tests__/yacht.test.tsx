@@ -54,17 +54,17 @@ test("fourOfAKind", () => {
     expect(f([5, 4, 5, 5, 5])).toBe(24);
     expect(f([1, 1, 2, 1, 1])).toBe(6);
     expect(f([1, 1, 1, 1, 1])).toBe(5);
-    expect(f([2, 1, 2, 1, 1])).toBeUndefined();
-    expect(f([2, 1, 2, 3, 3])).toBeUndefined();
+    expect(f([2, 1, 2, 1, 1])).toBeNull();
+    expect(f([2, 1, 2, 3, 3])).toBeNull();
 })
 
 test("fullHouse", () => {
     const f = box[8].func;
     expect(f([5, 4, 5, 5, 4])).toBe(23);
     expect(f([1, 1, 4, 1, 4])).toBe(11);
-    expect(f([1, 1, 4, 1, 1])).toBeUndefined();
+    expect(f([1, 1, 4, 1, 1])).toBeNull();
     expect(f([1, 1, 1, 1, 1])).toBe(5);
-    expect(f([1, 2, 2, 3, 1])).toBeUndefined();
+    expect(f([1, 2, 2, 3, 1])).toBeNull();
 })
 
 test("smallStraight", () => {
@@ -72,26 +72,26 @@ test("smallStraight", () => {
     expect(f([5, 4, 3, 2, 4])).toBe(15);
     expect(f([1, 3, 4, 2, 4])).toBe(15);
     expect(f([5, 4, 2, 3, 6])).toBe(15);
-    expect(f([6, 1, 3, 2, 5])).toBeUndefined();
-    expect(f([1, 2, 2, 5, 6])).toBeUndefined();
+    expect(f([6, 1, 3, 2, 5])).toBeNull();
+    expect(f([1, 2, 2, 5, 6])).toBeNull();
 })
 
 test("largeStraight", () => {
     const f = box[10].func;;
     expect(f([5, 1, 3, 2, 4])).toBe(30);
     expect(f([5, 4, 2, 3, 6])).toBe(30);
-    expect(f([1, 3, 4, 2, 4])).toBeUndefined();
-    expect(f([6, 1, 3, 2, 5])).toBeUndefined();
-    expect(f([1, 2, 2, 5, 6])).toBeUndefined();
+    expect(f([1, 3, 4, 2, 4])).toBeNull();
+    expect(f([6, 1, 3, 2, 5])).toBeNull();
+    expect(f([1, 2, 2, 5, 6])).toBeNull();
 })
 
 test("yacht", () => {
     const f = box[11].func;;
     expect(f([4, 4, 4, 4, 4])).toBe(50);
     expect(f([1, 1, 1, 1, 1])).toBe(50);
-    expect(f([4, 3, 4, 4, 4])).toBeUndefined();
-    expect(f([1, 1, 3, 2, 5])).toBeUndefined();
-    expect(f([1, 2, 3, 5, 6])).toBeUndefined();
+    expect(f([4, 3, 4, 4, 4])).toBeNull();
+    expect(f([1, 1, 3, 2, 5])).toBeNull();
+    expect(f([1, 2, 3, 5, 6])).toBeNull();
 })
 
 test("get_round", () => {
@@ -112,7 +112,6 @@ test("throw_dice", () => {
     expect(z.turn).toBe(2);
     z = z.throw_dice()!;
     expect(z.turn).toBe(3);
-    expect(z.throw_dice()).toBeUndefined();
 })
 
 test("lock_dice", () => {
@@ -129,8 +128,7 @@ test("fill_box", () => {
     y.turn = 2;
     const z = y.fill_box(0)!;
     expect(z.points === y.points).toBe(false);
-    expect(z.dice === y.dice).toBe(true);
     expect(z.turn === y.turn).toBe(false);
     expect(z.points[0]).toBe(5);
-    expect(z.fill_box(0)).toBeUndefined();
+    expect(z.fill_box(0)).toBeNull();
 })
