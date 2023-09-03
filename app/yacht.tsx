@@ -92,18 +92,18 @@ function choice(d: Dice) {
 }
 
 export const box = [
-    { id: "ones", func: ones },
-    { id: "twos", func: twos },
-    { id: "threes", func: threes },
-    { id: "fours", func: fours },
-    { id: "fives", func: fives },
-    { id: "sixes", func: sixes },
-    { id: "choice", func: choice },
-    { id: "fourOfAKind", func: fourOfAKind },
-    { id: "fullHouse", func: fullHouse },
-    { id: "smallStraight", func: smallStraight },
-    { id: "largeStraight", func: largeStraight },
-    { id: "yacht", func: yacht },
+    { id: "Ones", func: ones },
+    { id: "Twos", func: twos },
+    { id: "Threes", func: threes },
+    { id: "Fours", func: fours },
+    { id: "Fives", func: fives },
+    { id: "Sixes", func: sixes },
+    { id: "Choice", func: choice },
+    { id: "Four of a Kind", func: fourOfAKind },
+    { id: "Full House", func: fullHouse },
+    { id: "Small Straight", func: smallStraight },
+    { id: "Large Straight", func: largeStraight },
+    { id: "Yacht", func: yacht },
 ]
 
 export class Yacht {
