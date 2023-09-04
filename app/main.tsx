@@ -6,12 +6,15 @@ import { YachtProvider, useYacht, useYachtDispatch } from './YachtContest'
 
 export function Main() {
   return (
-    <YachtProvider>
-      <div className='flex justify-center p-10'>
-        <DiceArea />
-        <TableArea />
-      </div>
-    </YachtProvider>
+    <>
+      <h1 className='text-center p-5 text-6xl text-gray-800'>Yacht</h1>
+      <YachtProvider>
+        <div className='flex justify-center p-10'>
+          <DiceArea />
+          <TableArea />
+        </div>
+      </YachtProvider>
+    </>
   )
 }
 
@@ -43,9 +46,9 @@ function TableArea() {
   });
   const summery2 = [
     ...summery1.slice(0, 6),
-  { name: "Boanus", value: score.boanus, state: 'decided' as ValueState , handler: null },
-  ...summery1.slice(6, 12),
-  { name: "Total", value: score.total, state: 'decided' as ValueState, handler: null },
+    { name: "Boanus", value: score.boanus, state: 'decided' as ValueState, handler: null },
+    ...summery1.slice(6, 12),
+    { name: "Total", value: score.total, state: 'decided' as ValueState, handler: null },
   ];
   const items = summery2.map((x) =>
     <TableCell label={x.name} value={x.value} state={x.state} key={x.name} clickHandler={x.handler} />
