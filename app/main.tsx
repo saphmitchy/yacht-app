@@ -118,7 +118,7 @@ function Dice({ n, id }: { n: number, id: number }) {
       diceName = "six";
       break;
   }
-  const fileName = "/" + diceName + ".svg";
+  const fileName = "./" + diceName + ".svg";
   const alt = "dice of " + diceName;
   const isLocked = yacht.dice[id].locked;
   const isDisable = yacht.turn == 0 || yacht.turn == 3;
