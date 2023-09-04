@@ -135,7 +135,8 @@ function Dice({ n, id }: { n: number, id: number }) {
           src={fileName}
           alt={alt}
           width="100"
-          height="100" />
+          height="100"
+          unoptimized  />
       </button>
     </div>
   )
