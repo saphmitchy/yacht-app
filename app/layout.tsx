@@ -1,6 +1,5 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,6 +13,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ja">
+      <head>
+        <link rel="preload" as="image" href="./one.svg"></link>
+        <link rel="preload" as="image" href="./two.svg"></link>
+        <link rel="preload" as="image" href="./three.svg"></link>
+        <link rel="preload" as="image" href="./four.svg"></link>
+        <link rel="preload" as="image" href="./five.svg"></link>
+        <link rel="preload" as="image" href="./six.svg"></link>
+      </head>
       <body className="font-sans">{children}</body>
     </html>
   )
