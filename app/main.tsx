@@ -136,7 +136,7 @@ function Dice({ n, id }: { n: number, id: number }) {
           alt={alt}
           width="100"
           height="100"
-          unoptimized  />
+          priority={true} />
       </button>
     </div>
   )
