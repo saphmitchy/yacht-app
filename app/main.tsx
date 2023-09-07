@@ -6,16 +6,31 @@ import { YachtProvider, useYacht, useYachtDispatch } from './YachtContest'
 
 export function Main() {
   return (
-    <>
-      <h1 className='text-center p-5 text-6xl text-gray-800'>Yacht</h1>
+    <div className='text-gray-800'>
+      <h1 className='text-center p-5 text-6xl'>Yacht Game</h1>
       <YachtProvider>
+        <Messages/>
         <div className='flex justify-center p-10 flex-col sm:flex-row'>
           <DiceArea />
           <TableArea />
         </div>
       </YachtProvider>
-    </>
+    </div>
   )
+}
+
+function Messages() {
+  const yacht = useYacht();
+  const className = 'text-center text-3xl h-10';
+  if(yacht.is_end()) {
+    return <p className={className} >You get <b className='text-red-500'>{yacht.calc_score().total}</b> points🎉</p>;
+  } else if(yacht.turn == 3) {
+    return <p className={className}>Select hands!</p>;
+  } else if(yacht.turn == 0) {
+    return <p className={className}>Throw the Dice!</p>;
+  } else {
+    return <p className={className}>Select hands, or select dices and throw again</p>;
+  }
 }
 
 type ValueState = 'decided' | 'candidate' | 'disabled'
@@ -23,10 +38,12 @@ type ValueState = 'decided' | 'candidate' | 'disabled'
 function TableCell({ label, value, state, clickHandler }:
   { label: string, value: string | number | null, state: ValueState, clickHandler: (() => void) | null }) {
   const valueColor = state != 'candidate' ? ' text-gray-900' : ' text-gray-400';
+  const first = ' first:border-t-0 first:font-bold first:bg-yellow-300';
+  const last = ' last:border-t-4'
   const hover = state == 'candidate' ? ' hover:bg-yellow-200' : '';
   return (
-    <button className={'flex border-t-2  border-zinc-800 first:border-t-0 text-right' + hover} key={label} disabled={state != 'candidate'} onClick={clickHandler ? clickHandler : () => { }}>
-      <div className='basis-1/2 p-1 border-r-2 border-zinc-800'>{label}</div>
+    <button className={'flex border-t-2 border-zinc-700 text-right' + hover + first + last} key={label} disabled={state != 'candidate'} onClick={clickHandler ? clickHandler : () => { }}>
+      <div className='basis-1/2 p-1 border-r-2 border-zinc-700'>{label}</div>
       <div className={'basis-1/2 p-1' + valueColor}>{state == 'disabled' ? '' : value}</div>
     </button>);
 }
@@ -54,8 +71,8 @@ function TableArea() {
     <TableCell label={x.name} value={x.value} state={x.state} key={x.name} clickHandler={x.handler} />
   );
   return (
-    <div className='w-60 bg-yellow-100 rounded-lg grid grid-cols-1 grid-rows-15 text-gray-900 text-base text-right border-0 shadow-m border-2 border-black auto-rows-max m-auto sm:mx-0'>
-      <TableCell label="役" value="得点" state={'decided'} clickHandler={null} key={"hoge"} />
+    <div className='w-60 bg-yellow-100 rounded grid grid-cols-1 grid-rows-15 text-gray-900 text-base text-right border-0 shadow-m border-2 border-zinc-700 auto-rows-max m-auto sm:mx-0'>
+      <TableCell label="Hands" value="Points" state={'decided'} clickHandler={null} key={"hoge"} />
       {items}
     </div>
   )
@@ -88,32 +105,32 @@ function Buttons() {
 
 function ResetButton() {
   const dispatch = useYachtDispatch();
-  const className = 'rounded-full p-7 text-slate-800 shadow-md text-sm h-min mt-auto';
+  const className = 'rounded-full p-7 shadow-md text-lg h-min mt-auto';
   const clickHandler = () => {
     dispatch({ type: 'reset' });
   }
-  const option = ' bg-red-400 hover:bg-red-500 active:bg-red-600'
+  const option = ' bg-cyan-400 hover:bg-cyan-500 active:bg-cyan-600'
   return (
     <button className={className + option}
       onClick={clickHandler}>
-      最初から
+      Reset
     </button>)
 }
 
 function ThrowButton() {
   const yacht = useYacht();
   const dispatch = useYachtDispatch();
-  const className = 'rounded-full p-10 text-slate-800 shadow-md text-xl';
+  const className = 'rounded-full p-10 shadow-md text-xl';
   const clickHandler = () => {
     dispatch({ type: 'throw' });
   }
-  const isDisable = yacht.turn >= 3;
+  const isDisable = yacht.turn >= 3 || !yacht.dice.some(x => !x.locked);
   const option = isDisable ? ' bg-gray-400' : ' bg-teal-400 hover:bg-teal-500 active:bg-teal-600'
   return (
     <button className={className + option}
       onClick={clickHandler}
       disabled={isDisable}>
-      サイコロを投げる<br />(残り{3 - yacht.turn}回)
+      Throw dices<br />(remain {3 - yacht.turn} times)
     </button>)
 }
 
@@ -152,7 +169,7 @@ function Dice({ n, id }: { n: number, id: number }) {
     dispatch({ type: 'lock', id: id });
   }
   return (
-    <div className='basis-1/3 shrink-0 grow-0 px-5' key={id}>
+    <div className='basis-1/3 shrink-0 grow-0 px-5 py-2' key={id}>
       <button className={className + shadow + (isDisable ? '' : hover)} onClick={clickHandler} disabled={isDisable}>
         <Image className={className}
           src={fileName}

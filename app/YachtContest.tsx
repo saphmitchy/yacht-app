@@ -6,7 +6,7 @@ const YachtDispatchContext = createContext<Dispatch<YachtAction> | null>(null);
 
 type YachtAction = { type: 'throw' } | { type: 'lock', id: number } | { type: 'fill', id: number } | { type: 'reset' };
 
-export function YachtProvider({ children }: { children: JSX.Element }) {
+export function YachtProvider({ children }: { children: JSX.Element[] }) {
   const [yacht, dispatch] = useReducer(
     yachtReducer,
     new Yacht()

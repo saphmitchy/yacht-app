@@ -145,12 +145,10 @@ export class Yacht {
             }
         );
         for (let i = 0; i < this.dice.length; i++) {
-            if (!res.dice[i].locked) {
-                const nextValue = Math.floor(Math.random() * 6) + 1
-                res.dice[i] = {
-                    ...this.dice[i],
-                    value: nextValue,
-                }
+            const nextValue = res.dice[i].locked ? res.dice[i].value : Math.floor(Math.random() * 6) + 1;
+            res.dice[i] = {
+                value: nextValue,
+                locked: true,
             }
         }
         return res;
