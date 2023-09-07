@@ -1,6 +1,8 @@
 'use client'
 
 import Image from 'next/image'
+import { useState } from 'react';
+import { Popover } from '@mui/material';
 import { box } from './yacht'
 import { YachtProvider, useYacht, useYachtDispatch } from './YachtContest'
 
@@ -9,7 +11,7 @@ export function Main() {
     <div className='text-gray-800'>
       <h1 className='text-center p-5 text-6xl'>Yacht Game</h1>
       <YachtProvider>
-        <Messages/>
+        <Messages />
         <div className='flex justify-center p-10 flex-col sm:flex-row'>
           <DiceArea />
           <TableArea />
@@ -22,11 +24,11 @@ export function Main() {
 function Messages() {
   const yacht = useYacht();
   const className = 'text-center text-3xl h-10 m-3 p-2';
-  if(yacht.is_end()) {
+  if (yacht.is_end()) {
     return <p className={className} >You get <b className='text-red-500'>{yacht.calc_score().total}</b> points🎉</p>;
-  } else if(yacht.turn == 3) {
+  } else if (yacht.turn == 3) {
     return <p className={className}>Select hands!</p>;
-  } else if(yacht.turn == 0) {
+  } else if (yacht.turn == 0) {
     return <p className={className}>Throw the Dice!</p>;
   } else {
     return <p className={className}>Select hands, or select dices and throw again</p>;
@@ -37,15 +39,52 @@ type ValueState = 'decided' | 'candidate' | 'disabled'
 
 function TableCell({ label, value, state, clickHandler }:
   { label: string, value: string | number | null, state: ValueState, clickHandler: (() => void) | null }) {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
   const valueColor = state != 'candidate' ? ' text-gray-900' : ' text-gray-400';
   const first = ' first:border-t-0 first:font-bold first:bg-yellow-300';
   const last = ' last:border-t-4'
   const hover = state == 'candidate' ? ' hover:bg-yellow-200' : '';
   return (
-    <button className={'flex border-t-2 border-zinc-700 text-right' + hover + first + last} key={label} disabled={state != 'candidate'} onClick={clickHandler ? clickHandler : () => { }}>
-      <div className='basis-1/2 p-1 border-r-2 border-zinc-700'>{label}</div>
-      <div className={'basis-1/2 p-1' + valueColor}>{state == 'disabled' ? '' : value}</div>
-    </button>);
+    <>
+      <button className={'flex border-t-2 border-zinc-700 text-right' + hover + first + last}
+        key={label}
+        disabled={state != 'candidate'}
+        onClick={clickHandler ? clickHandler : () => { }}>
+        <div className='basis-1/2 p-1 border-r-2 border-zinc-700'
+          onMouseEnter={handlePopoverOpen}
+          onMouseLeave={handlePopoverClose}>{label}</div>
+        <div className={'basis-1/2 p-1' + valueColor}>{state == 'disabled' ? '' : value}</div>
+      </button>
+      <Popover
+        id="mouse-over-popover"
+        sx={{
+          pointerEvents: 'none',
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'center',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'center',
+          horizontal: 'right',
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      >
+        <p className='p-1 bg-stone-800 text-stone-100'>description</p>
+      </Popover>
+    </>);
 }
 
 function TableArea() {
