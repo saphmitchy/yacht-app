@@ -4,7 +4,7 @@ import { Yacht } from './yacht';
 const YachtContext = createContext<Yacht | null>(null);
 const YachtDispatchContext = createContext<Dispatch<YachtAction> | null>(null);
 
-type YachtAction = { type: 'throw' } | { type: 'lock', id: number } | { type: 'fill', id: number };
+type YachtAction = { type: 'throw' } | { type: 'lock', id: number } | { type: 'fill', id: number } | { type: 'reset' };
 
 export function YachtProvider({ children }: { children: JSX.Element }) {
   const [yacht, dispatch] = useReducer(
@@ -39,7 +39,7 @@ function yachtReducer(yacht: Yacht, action: YachtAction) {
         return yacht;
       }
     }
-    case 'lock' : {
+    case 'lock': {
       const isLocked = yacht.dice[action.id].locked;
       if (isLocked) {
         return yacht.unlock_dice(action.id);
@@ -47,13 +47,17 @@ function yachtReducer(yacht: Yacht, action: YachtAction) {
         return yacht.lock_dice(action.id);
       }
     }
-    case 'fill' : {
+    case 'fill': {
       const res = yacht.fill_box(action.id);
       if (res) {
         return res;
       } else {
         return yacht;
       }
+    }
+    case 'reset': {
+      const res = new Yacht();
+      return res;
     }
   }
 }

@@ -219,4 +219,8 @@ export class Yacht {
             total: upper + lower + boanus,
         }
     }
+
+    is_end(): boolean {
+        return this.get_round() == box.length;
+    }
 }

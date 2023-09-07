@@ -74,27 +74,47 @@ function DiceArea() {
         <Dice n={yacht.dice[3].value} id={3} key={4} />
         <Dice n={yacht.dice[4].value} id={4} key={5} />
       </div>
-      <ThrowButton />
+      <Buttons />
     </div>
   )
+}
+
+function Buttons() {
+  return (<div className='py-10 flex justify-around' key={"button"}>
+    <ResetButton />
+    <ThrowButton />
+  </div>)
+}
+
+function ResetButton() {
+  const dispatch = useYachtDispatch();
+  const className = 'rounded-full p-7 text-slate-800 shadow-md text-sm h-min mt-auto';
+  const clickHandler = () => {
+    dispatch({ type: 'reset' });
+  }
+  const option = ' bg-red-400 hover:bg-red-500 active:bg-red-600'
+  return (
+    <button className={className + option}
+      onClick={clickHandler}>
+      最初から
+    </button>)
 }
 
 function ThrowButton() {
   const yacht = useYacht();
   const dispatch = useYachtDispatch();
+  const className = 'rounded-full p-10 text-slate-800 shadow-md text-xl';
   const clickHandler = () => {
     dispatch({ type: 'throw' });
   }
   const isDisable = yacht.turn >= 3;
-  const className = 'rounded-full p-10 my-10 text-slate-800 shadow-md text-xl';
   const option = isDisable ? ' bg-gray-400' : ' bg-teal-400 hover:bg-teal-500 active:bg-teal-600'
-  return (<div className='flex justify-around' key={"button"}>
+  return (
     <button className={className + option}
       onClick={clickHandler}
       disabled={isDisable}>
       サイコロを投げる<br />(残り{3 - yacht.turn}回)
-    </button>
-  </div>)
+    </button>)
 }
 
 function Dice({ n, id }: { n: number, id: number }) {
