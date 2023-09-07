@@ -9,7 +9,7 @@ export function Main() {
     <>
       <h1 className='text-center p-5 text-6xl text-gray-800'>Yacht</h1>
       <YachtProvider>
-        <div className='flex justify-center p-10'>
+        <div className='flex justify-center p-10 flex-col sm:flex-row'>
           <DiceArea />
           <TableArea />
         </div>
@@ -54,7 +54,7 @@ function TableArea() {
     <TableCell label={x.name} value={x.value} state={x.state} key={x.name} clickHandler={x.handler} />
   );
   return (
-    <div className='w-60 bg-yellow-100 rounded-lg grid grid-cols-1 grid-rows-15 text-gray-900 text-base text-right border-0 shadow-m border-2 border-black auto-rows-max'>
+    <div className='w-60 bg-yellow-100 rounded-lg grid grid-cols-1 grid-rows-15 text-gray-900 text-base text-right border-0 shadow-m border-2 border-black auto-rows-max m-auto sm:mx-0'>
       <TableCell label="役" value="得点" state={'decided'} clickHandler={null} key={"hoge"} />
       {items}
     </div>
@@ -64,13 +64,13 @@ function TableArea() {
 function DiceArea() {
   const yacht = useYacht();
   return (
-    <div className='w-90'>
+    <div className='flex flex-col'>
       <div className='flex justify-between' key={"upper"}>
         <Dice n={yacht.dice[0].value} id={0} key={1} />
         <Dice n={yacht.dice[1].value} id={1} key={2} />
         <Dice n={yacht.dice[2].value} id={2} key={3} />
       </div>
-      <div className='my-5 flex justify-center' key={"lower"} >
+      <div className='flex justify-center' key={"lower"} >
         <Dice n={yacht.dice[3].value} id={3} key={4} />
         <Dice n={yacht.dice[4].value} id={4} key={5} />
       </div>
@@ -86,7 +86,7 @@ function ThrowButton() {
     dispatch({ type: 'throw' });
   }
   const isDisable = yacht.turn >= 3;
-  const className = 'rounded-full p-10 mt-10 text-slate-800 shadow-md text-xl';
+  const className = 'rounded-full p-10 my-10 text-slate-800 shadow-md text-xl';
   const option = isDisable ? ' bg-gray-400' : ' bg-teal-400 hover:bg-teal-500 active:bg-teal-600'
   return (<div className='flex justify-around' key={"button"}>
     <button className={className + option}
@@ -132,7 +132,7 @@ function Dice({ n, id }: { n: number, id: number }) {
     dispatch({ type: 'lock', id: id });
   }
   return (
-    <div className='mx-5' key={id}>
+    <div className='basis-1/3 shrink-0 grow-0 px-5' key={id}>
       <button className={className + shadow + (isDisable ? '' : hover)} onClick={clickHandler} disabled={isDisable}>
         <Image className={className}
           src={fileName}
