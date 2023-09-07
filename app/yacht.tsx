@@ -54,13 +54,16 @@ function smallStraight(d: Dice) {
     let a = 0;
     let b = 0;
     for (let i = 0; i < e.length - 1; i++) {
-        if (e[i] == e[i + 1]) {
+        if (e[i] + 1 == e[i + 1]) {
             a += 1;
-        } else if (e[i] + 1 == e[i + 1]) {
-            b += 1;
+        } else if (e[i] != e[i + 1]) {
+            if(b < a) {
+                b = a;
+                a = 0;
+            }
         }
     }
-    if ((a == 1 && b == 3) || (a == 0 && b == 4)) {
+    if (3 <= a || 3 <= b) {
         return 15;
     } else {
         return null;

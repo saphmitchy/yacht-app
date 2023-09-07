@@ -72,6 +72,7 @@ test("smallStraight", () => {
     expect(f([5, 4, 3, 2, 4])).toBe(15);
     expect(f([1, 3, 4, 2, 4])).toBe(15);
     expect(f([5, 4, 2, 3, 6])).toBe(15);
+    expect(f([2, 3, 1, 4, 6])).toBe(15);
     expect(f([6, 1, 3, 2, 5])).toBeNull();
     expect(f([1, 2, 2, 5, 6])).toBeNull();
 })
@@ -108,8 +109,10 @@ test("throw_dice", () => {
     expect(z.turn).toBe(1);
     expect(z.points === y.points).toBe(true);
     expect(z.dice === y.dice).toBe(false);
+    z = z.unlock_dice(0);
     z = z.throw_dice()!;
     expect(z.turn).toBe(2);
+    z = z.unlock_dice(0);
     z = z.throw_dice()!;
     expect(z.turn).toBe(3);
 })

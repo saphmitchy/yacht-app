@@ -21,7 +21,7 @@ export function Main() {
 
 function Messages() {
   const yacht = useYacht();
-  const className = 'text-center text-3xl h-10';
+  const className = 'text-center text-3xl h-10 m-3 p-2';
   if(yacht.is_end()) {
     return <p className={className} >You get <b className='text-red-500'>{yacht.calc_score().total}</b> points🎉</p>;
   } else if(yacht.turn == 3) {
@@ -124,7 +124,7 @@ function ThrowButton() {
   const clickHandler = () => {
     dispatch({ type: 'throw' });
   }
-  const isDisable = yacht.turn >= 3 || !yacht.dice.some(x => !x.locked);
+  const isDisable = yacht.turn >= 3 || !yacht.dice.some(x => !x.locked) || yacht.get_round() == box.length;
   const option = isDisable ? ' bg-gray-400' : ' bg-teal-400 hover:bg-teal-500 active:bg-teal-600'
   return (
     <button className={className + option}
