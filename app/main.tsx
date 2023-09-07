@@ -133,8 +133,8 @@ function Dice({ n, id }: { n: number, id: number }) {
   }
   return (
     <div className='mx-5' key={id}>
-      <button onClick={clickHandler} disabled={isDisable}>
-        <Image className={className + shadow + (isDisable ? '' : hover)}
+      <button className={className + shadow + (isDisable ? '' : hover)} onClick={clickHandler} disabled={isDisable}>
+        <Image className={className}
           src={fileName}
           alt={alt}
           width="100"
