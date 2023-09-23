@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useState } from 'react';
 import { Popover } from '@mui/material';
-import { useSpring, animated } from '@react-spring/web'
+import { useSpring, animated, SpringValues } from '@react-spring/web'
 import { box } from './yacht'
 import { YachtProvider, useYacht, useYachtDispatch } from './YachtContest'
 
@@ -220,7 +220,7 @@ function Dice({ n, id }: { n: number, id: number }) {
   }
   return (
     <div className='basis-1/3 shrink-0 grow-0 w-32 h-32 grid' key={id}>
-      <animated.button style={...springs} className={className + shadow + (isDisable ? '' : hover)} onClick={clickHandler} disabled={isDisable}>
+      <animated.button style={springs} className={className + shadow + (isDisable ? '' : hover)} onClick={clickHandler} disabled={isDisable}>
         <Image className={className}
           src={fileName}
           alt={alt}
