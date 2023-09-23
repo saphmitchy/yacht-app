@@ -57,7 +57,7 @@ function smallStraight(d: Dice) {
         if (e[i] + 1 == e[i + 1]) {
             a += 1;
         } else if (e[i] != e[i + 1]) {
-            if(b < a) {
+            if (b < a) {
                 b = a;
                 a = 0;
             }
@@ -122,12 +122,14 @@ export class Yacht {
     }[];
     public readonly points: Array<number | null>;
     public readonly turn: number;
+    public readonly state: 'loading' | 'loaded'
 
     constructor() {
         this.dice = init_dice();
         this.points = new Array(box.length);
         this.turn = 0;
         this.points.fill(null);
+        this.state = 'loaded';
     }
 
     get_round(): number {
@@ -223,5 +225,16 @@ export class Yacht {
 
     is_end(): boolean {
         return this.get_round() == box.length;
+    }
+
+    static gen_server_yacht(): Yacht {
+        const tmp = new Yacht();
+        return Object.assign(
+            Object.create(Yacht.prototype),
+            tmp,
+            {
+                dice: tmp.dice.map(x => { return { ...x, value: 0 } }),
+                state: 'loading'
+            });
     }
 }

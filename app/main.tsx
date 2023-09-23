@@ -24,7 +24,9 @@ export function Main() {
 function Messages() {
   const yacht = useYacht();
   const className = 'text-center text-3xl h-10 m-3 p-2';
-  if (yacht.is_end()) {
+  if (yacht.state == 'loading') {
+    return <p className={className} > Loading... </p>;
+  } else if (yacht.is_end()) {
     return <p className={className} >You get <b className='text-red-500'>{yacht.calc_score().total}</b> points🎉</p>;
   } else if (yacht.turn == 3) {
     return <p className={className}>Select hands!</p>;
@@ -163,13 +165,14 @@ function ThrowButton() {
   const clickHandler = () => {
     dispatch({ type: 'throw' });
   }
-  const isDisable = yacht.turn >= 3 || !yacht.dice.some(x => !x.locked) || yacht.get_round() == box.length;
+  const isDisable = yacht.state == 'loading' || yacht.turn >= 3 || !yacht.dice.some(x => !x.locked) || yacht.get_round() == box.length;
   const option = isDisable ? ' bg-gray-400' : ' bg-teal-400 hover:bg-teal-500 active:bg-teal-600'
+  const throw_times = yacht.state == 'loading' ? 0 : 3 - yacht.turn;
   return (
     <button className={className + option}
       onClick={clickHandler}
       disabled={isDisable}>
-      Throw dices<br />(remain {3 - yacht.turn} times)
+      Throw dices<br />(remain {throw_times} times)
     </button>)
 }
 
@@ -178,6 +181,9 @@ function Dice({ n, id }: { n: number, id: number }) {
   const dispatch = useYachtDispatch();
   let diceName = "";
   switch (n) {
+    case 0:
+      diceName = "zero";
+      break;
     case 1:
       diceName = "one";
       break;
