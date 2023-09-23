@@ -110,7 +110,7 @@ export const box = [
 function init_dice() {
     const dice = new Array(5);
     for (let i = 0; i < dice.length; i++) {
-        dice[i] = { value: 1, locked: false };
+        dice[i] = { value: 1, locked: false, key: i * 1000 };
     }
     return dice;
 }
@@ -119,6 +119,7 @@ export class Yacht {
     public readonly dice: {
         value: number,
         locked: boolean,
+        key: number,
     }[];
     public readonly points: Array<number | null>;
     public readonly turn: number;
@@ -150,10 +151,14 @@ export class Yacht {
             }
         );
         for (let i = 0; i < this.dice.length; i++) {
-            const nextValue = res.dice[i].locked ? res.dice[i].value : Math.floor(Math.random() * 6) + 1;
-            res.dice[i] = {
-                value: nextValue,
+            res.dice[i] = res.dice[i].locked ? {
+                value: this.dice[i].value,
                 locked: true,
+                key: this.dice[i].key
+            } : {
+                value: Math.floor(Math.random() * 6) + 1,
+                locked: true,
+                key: this.dice[i].key + 1
             }
         }
         return res;

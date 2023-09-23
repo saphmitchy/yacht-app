@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { useState } from 'react';
 import { Popover } from '@mui/material';
+import { useSpring, animated } from '@react-spring/web'
 import { box } from './yacht'
 import { YachtProvider, useYacht, useYachtDispatch } from './YachtContest'
 
@@ -124,13 +125,13 @@ function DiceArea() {
   return (
     <div className='flex flex-col'>
       <div className='flex justify-between' key={"upper"}>
-        <Dice n={yacht.dice[0].value} id={0} key={1} />
-        <Dice n={yacht.dice[1].value} id={1} key={2} />
-        <Dice n={yacht.dice[2].value} id={2} key={3} />
+        <Dice n={yacht.dice[0].value} id={0} key={yacht.dice[0].key} />
+        <Dice n={yacht.dice[1].value} id={1} key={yacht.dice[1].key} />
+        <Dice n={yacht.dice[2].value} id={2} key={yacht.dice[2].key} />
       </div>
       <div className='flex justify-center' key={"lower"} >
-        <Dice n={yacht.dice[3].value} id={3} key={4} />
-        <Dice n={yacht.dice[4].value} id={4} key={5} />
+        <Dice n={yacht.dice[3].value} id={3} key={yacht.dice[3].key} />
+        <Dice n={yacht.dice[4].value} id={4} key={yacht.dice[4].key} />
       </div>
       <Buttons />
     </div>
@@ -179,6 +180,10 @@ function ThrowButton() {
 function Dice({ n, id }: { n: number, id: number }) {
   const yacht = useYacht();
   const dispatch = useYachtDispatch();
+  const springs = useSpring({
+    from: { rotate: -180, hight: 10, width: 10 },
+    to: { rotate: 0, hight: 100, width: 100 },
+  });
   let diceName = "";
   switch (n) {
     case 0:
@@ -207,22 +212,22 @@ function Dice({ n, id }: { n: number, id: number }) {
   const alt = "dice of " + diceName;
   const isLocked = yacht.dice[id].locked;
   const isDisable = yacht.turn == 0 || yacht.turn == 3;
-  const className = 'rounded-lg';
+  const className = 'rounded-lg place-self-center';
   const shadow = isLocked ? " shadow-all-locked" : " shadow-all-unlocked";
   const hover = isLocked ? " hover:shadow-allx-locked" : " hover:shadow-allx-unlocked";
   const clickHandler = () => {
     dispatch({ type: 'lock', id: id });
   }
   return (
-    <div className='basis-1/3 shrink-0 grow-0 px-5 py-2' key={id}>
-      <button className={className + shadow + (isDisable ? '' : hover)} onClick={clickHandler} disabled={isDisable}>
+    <div className='basis-1/3 shrink-0 grow-0 w-32 h-32 grid' key={id}>
+      <animated.button style={...springs} className={className + shadow + (isDisable ? '' : hover)} onClick={clickHandler} disabled={isDisable}>
         <Image className={className}
           src={fileName}
           alt={alt}
           width="100"
           height="100"
           priority={true} />
-      </button>
+      </animated.button>
     </div>
   )
 }
