@@ -9,11 +9,11 @@ import { YachtProvider, useYacht, useYachtDispatch } from './YachtContest'
 
 export function Main() {
   return (
-    <div className='text-gray-800'>
+    <div className='text-gray-800 w-full'>
       <h1 className='text-center p-5 text-6xl'>Yacht Game</h1>
       <YachtProvider>
         <Messages />
-        <div className='flex justify-center p-10 flex-col sm:flex-row'>
+        <div className='flex justify-center px-5 flex-col sm:flex-row'>
           <DiceArea />
           <TableArea />
         </div>
@@ -24,7 +24,7 @@ export function Main() {
 
 function Messages() {
   const yacht = useYacht();
-  const className = 'text-center text-3xl h-10 m-3 p-2';
+  const className = 'flex justify-center items-center text-center text-3xl m-3 p-2 h-32 sm:h-auto';
   if (yacht.state == 'loading') {
     return <p className={className} > Loading... </p>;
   } else if (yacht.is_end()) {
@@ -113,7 +113,7 @@ function TableArea() {
     <TableCell label={x.name} value={x.value} state={x.state} key={x.name} clickHandler={x.handler} />
   );
   return (
-    <div className='w-60 bg-yellow-100 rounded grid grid-cols-1 grid-rows-15 text-gray-900 text-base text-right border-0 shadow-m border-2 border-zinc-700 auto-rows-max m-auto sm:mx-0'>
+    <div className='w-60 bg-yellow-100 rounded grid grid-cols-1 grid-rows-15 text-gray-900 text-base text-right border-0 shadow-m border-2 border-zinc-700 auto-rows-max sm:mx-0'>
       <TableCell label="Hands" value="Points" state={'decided'} clickHandler={null} key={"hoge"} />
       {items}
     </div>
@@ -123,7 +123,7 @@ function TableArea() {
 function DiceArea() {
   const yacht = useYacht();
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col mx-3'>
       <div className='flex justify-between' key={"upper"}>
         <Dice n={yacht.dice[0].value} id={0} key={yacht.dice[0].key} />
         <Dice n={yacht.dice[1].value} id={1} key={yacht.dice[1].key} />
@@ -181,8 +181,8 @@ function Dice({ n, id }: { n: number, id: number }) {
   const yacht = useYacht();
   const dispatch = useYachtDispatch();
   const springs = useSpring({
-    from: { rotate: -180, hight: 10, width: 10 },
-    to: { rotate: 0, hight: 100, width: 100 },
+    from: { rotate: -180, opacity: 0 },
+    to: { rotate: 0, opacity: 1 },
   });
   let diceName = "";
   switch (n) {
@@ -212,18 +212,22 @@ function Dice({ n, id }: { n: number, id: number }) {
   const alt = "dice of " + diceName;
   const isLocked = yacht.dice[id].locked;
   const isDisable = yacht.turn == 0 || yacht.turn == 3;
-  const className = 'rounded-lg place-self-center';
+  const className = 'rounded-lg';
   const shadow = isLocked ? " shadow-all-locked" : " shadow-all-unlocked";
   const hover = isLocked ? " hover:shadow-allx-locked" : " hover:shadow-allx-unlocked";
   const clickHandler = () => {
     dispatch({ type: 'lock', id: id });
   }
   return (
-    <div className='basis-1/3 shrink-0 grow-0 w-32 h-32 grid' key={id}>
-      <animated.button style={springs} className={className + shadow + (isDisable ? '' : hover)} onClick={clickHandler} disabled={isDisable}>
+    <div className='basis-1/3 shrink-0 grow-0 grid mb-5 px-2' key={id}>
+      <animated.button style={springs} className={className + ' place-self-center' + shadow + (isDisable ? '' : hover)} onClick={clickHandler} disabled={isDisable}>
         <Image className={className}
           src={fileName}
           alt={alt}
+          style={{
+            width: '100px',
+            height: 'auto',
+          }}
           width="100"
           height="100"
           priority={true} />
