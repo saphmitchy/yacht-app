@@ -113,7 +113,7 @@ function TableArea() {
     <TableCell label={x.name} value={x.value} state={x.state} key={x.name} clickHandler={x.handler} />
   );
   return (
-    <div className='w-60 bg-yellow-100 rounded grid grid-cols-1 grid-rows-15 text-gray-900 text-base text-right border-0 shadow-m border-2 border-zinc-700 auto-rows-max sm:mx-0'>
+    <div className='w-60 ml-auto mr-auto bg-yellow-100 rounded grid grid-cols-1 grid-rows-15 text-gray-900 text-base text-right border-0 shadow-m border-2 border-zinc-700 auto-rows-max sm:mx-0'>
       <TableCell label="Hands" value="Points" state={'decided'} clickHandler={null} key={"hoge"} />
       {items}
     </div>
